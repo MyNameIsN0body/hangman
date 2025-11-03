@@ -25,5 +25,47 @@ bin/
 ### VS Code ###
 .vscode/
 
-### Mac OS ###
+# Compiled class files
+*.class
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Build output
+target/
+build/
+
+# Log files
+*.log
+logs/
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# OS generated files
 .DS_Store
+Thumbs.db
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+
+# Gradle
+.gradle/
+gradle-app.setting
+
+# Unit test reports
+TEST-*.xml
+
+# System files
+*.swp
+*.swo
+*~
