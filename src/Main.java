@@ -3,13 +3,14 @@ import java.util.*;
 
 public class Main {
     private static final int MAX_MISTAKES = 7;
-    private static final char HIDDEN_CHAR = '\u25A1';
+    private static final char HIDDEN_CHAR = '□';
     private static final String NAME_GAME = "'Виселица'";
 
     public static void main(String[] args) {
 
         List<String> gameStages = new ArrayList<>(Arrays.asList("logo", "game_1", "game_2", "game_3",
                 "game_4", "game_5", "game_6", "gameover", "win")); // 7 попыток
+        List<String> wrongLetterList = new ArrayList<>();
         printResult(gameStages.getFirst());
         System.out.print("Игра " + NAME_GAME + "\n");
         System.out.println("Спасите человечка от виселицы, угадав загаданное слово по буквам быстрее, чем закончатся ваши попытки!!!\n");
@@ -27,10 +28,11 @@ public class Main {
 
             if (gameWord.contains(String.valueOf(playerLitter))) {
                 hiddenWord = openLetter(gameWord, hiddenWord, playerLitter);
-//                hiddenCharCount = getCountHiddenChar(hiddenWord, HIDDEN_CHAR);
             } else {
+                wrongLetterList.add(String.valueOf(playerLitter));
                 currentCountMistake++;
-                System.out.println("Ошибки: " + currentCountMistake + "/" + MAX_MISTAKES + "\n");
+                System.out.println("Ошибки: " + currentCountMistake + "/" + MAX_MISTAKES);
+                printWrongLetterList(wrongLetterList);
                 printResult(gameStages.get(currentCountMistake));
             }
             hiddenCharCount = getCountHiddenChar(hiddenWord, HIDDEN_CHAR);
@@ -40,6 +42,14 @@ public class Main {
             }
         }
         System.out.println("Загаданное слово: " + gameWord);
+    }
+
+    public static void printWrongLetterList(List<String> lists) {
+        System.out.print("Список неудачных букв: ");
+        for (String list: lists) {
+            System.out.print(list + " ");
+        }
+        System.out.println(" ");
     }
 
     public static int getCountHiddenChar(char[] hiddenWord, char hiddenChar) {
@@ -63,7 +73,7 @@ public class Main {
 
     public static void printHiddenWord(char[] hiddenWord) {
         for (char letter : hiddenWord) {
-            System.out.print(letter);
+            System.out.print(letter + " ");
         }
         System.out.println(" ");
     }
