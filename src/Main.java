@@ -4,13 +4,14 @@ import java.util.*;
 public class Main {
     private static final int MAX_MISTAKES = 7;
     private static final char HIDDEN_CHAR = '\u25A1';
+    private static final String NAME_GAME = "'Виселица'";
 
     public static void main(String[] args) {
 
         List<String> gameStages = new ArrayList<>(Arrays.asList("logo", "game_1", "game_2", "game_3",
-                "game_4", "game_5", "game_6", "gameover","win")); // 7 попыток
+                "game_4", "game_5", "game_6", "gameover", "win")); // 7 попыток
         printResult(gameStages.getFirst());
-        System.out.print("Игра 'Виселица'\n");
+        System.out.print("Игра " + NAME_GAME + "\n");
         System.out.println("Спасите человечка от виселицы, угадав загаданное слово по буквам быстрее, чем закончатся ваши попытки!!!\n");
         List<String> words = getDictionaryWords();
         String gameWord = getRandomWord(words); //gameWord
@@ -29,7 +30,7 @@ public class Main {
 //                hiddenCharCount = getCountHiddenChar(hiddenWord, HIDDEN_CHAR);
             } else {
                 currentCountMistake++;
-                System.out.println("Ошибки: " + currentCountMistake + "/"+ MAX_MISTAKES +"\n");
+                System.out.println("Ошибки: " + currentCountMistake + "/" + MAX_MISTAKES + "\n");
                 printResult(gameStages.get(currentCountMistake));
             }
             hiddenCharCount = getCountHiddenChar(hiddenWord, HIDDEN_CHAR);
@@ -147,7 +148,6 @@ public class Main {
                     continue;
                 }
                 if (line.contains(end)) {
-                    insideBlock = false;
                     break;
                 }
                 if (insideBlock) {
@@ -155,8 +155,7 @@ public class Main {
                 }
 
             }
-
-            System.out.println(content.toString());
+            System.out.println(content);
         } catch (IOException e) {
             System.out.println("Ошибка чтения файла: " + e.getMessage());
         }
