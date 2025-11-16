@@ -10,7 +10,7 @@ public class Main {
 
         List<String> gameStages = new ArrayList<>(Arrays.asList(
                 "logo",
-                "game_1", "game_2", "game_3","game_4", "game_5", "game_6", "gameover",
+                "game_1", "game_2", "game_3", "game_4", "game_5", "game_6", "gameover",
                 "win")); // 7 попыток
 
         printResult(gameStages.getFirst());
@@ -27,16 +27,16 @@ public class Main {
             List<String> words = getDictionaryWords();
             String secretWord = getRandomWord(words);
             int currentCountMistake = 0;
-            char[] hiddenWord = intiHiddenWord(secretWord, HIDDEN_CHAR);
+            char[] displayedWord = intiHiddenWord(secretWord, HIDDEN_CHAR);
             char playerLitter;
             int hiddenCharCount;
 
             while (currentCountMistake < MAX_MISTAKES) {
-                printHiddenWord(hiddenWord);
+                printHiddenWord(displayedWord);
                 playerLitter = getPlayerLetter();
 
                 if (secretWord.contains(String.valueOf(playerLitter))) {
-                    hiddenWord = openLetter(secretWord, hiddenWord, playerLitter);
+                    openLetter(secretWord, displayedWord, playerLitter);
                 } else {
                     if (wrongLetterList.contains(String.valueOf(playerLitter))) {
                         System.out.println("Такая буква уже была использована, попробуйте новую");
@@ -48,7 +48,7 @@ public class Main {
                     printWrongLetterList(wrongLetterList);
                     printResult(gameStages.get(currentCountMistake));
                 }
-                hiddenCharCount = getCountHiddenChar(hiddenWord, HIDDEN_CHAR);
+                hiddenCharCount = getCountHiddenChar(displayedWord, HIDDEN_CHAR);
                 if (hiddenCharCount == 0) {
                     printResult(gameStages.getLast());
                     break;
@@ -61,7 +61,7 @@ public class Main {
 
     public static void printWrongLetterList(List<String> lists) {
         System.out.print("Список неудачных букв: ");
-        for (String list: lists) {
+        for (String list : lists) {
             System.out.print(list + " ");
         }
         System.out.println(" ");
@@ -69,21 +69,20 @@ public class Main {
 
     public static int getCountHiddenChar(char[] hiddenWord, char hiddenChar) {
         int countHiddenChar = 0;
-        for (int i = 0; i < hiddenWord.length; i++) {
-            if (hiddenWord[i] == hiddenChar) {
+        for (char hW : hiddenWord) {
+            if (hW == hiddenChar) {
                 countHiddenChar++;
             }
         }
         return countHiddenChar;
     }
 
-    public static char[] openLetter(String wordResult, char[] hiddenWord, char litter) {
+    public static void openLetter(String wordResult, char[] hiddenWord, char litter) {
         for (int i = 0; i < wordResult.length(); i++) {
             if (wordResult.charAt(i) == litter) {
                 hiddenWord[i] = litter;
             }
         }
-        return hiddenWord;
     }
 
     public static void printHiddenWord(char[] hiddenWord) {
@@ -100,6 +99,7 @@ public class Main {
         }
         return hiddenWord;
     }
+
     public static boolean isWantToPlay() {
         System.out.println("Нажмите Enter чтобы начать игру!");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
