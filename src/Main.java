@@ -127,23 +127,19 @@ public class Main {
                 input = reader.readLine();
             } while (!isValidInput(input));
 
-            //reader.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return input.charAt(0);
+        return input.toLowerCase().charAt(0);
     }
 
     public static boolean isValidInput(String letter) {
-        //проверка на null и пустая ли строка
         if (letter == null || letter.isEmpty()) {
             return false;
         }
-        // проверка на длину строки
         if (letter.length() > 1) {
             return false;
         }
-        // проверка на кириллицу
         char character = letter.charAt(0);
         if ((character < 1040 || character > 1103) && (character != 1025 && character != 1105)) {
             return false;
