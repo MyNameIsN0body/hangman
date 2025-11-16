@@ -8,40 +8,55 @@ public class Main {
 
     public static void main(String[] args) {
 
-        List<String> gameStages = new ArrayList<>(Arrays.asList("logo", "game_1", "game_2", "game_3",
-                "game_4", "game_5", "game_6", "gameover", "win")); // 7 попыток
-        List<String> wrongLetterList = new ArrayList<>();
+        List<String> gameStages = new ArrayList<>(Arrays.asList(
+                "logo",
+                "game_1", "game_2", "game_3","game_4", "game_5", "game_6", "gameover",
+                "win")); // 7 попыток
+
         printResult(gameStages.getFirst());
-        System.out.print("Игра " + NAME_GAME + "\n");
-        System.out.println("Спасите человечка от виселицы, угадав загаданное слово по буквам быстрее, чем закончатся ваши попытки!!!\n");
-        List<String> words = getDictionaryWords();
-        String gameWord = getRandomWord(words); //gameWord
+        System.out.print(
+                "Игра " + NAME_GAME + "\n" +
+                        "Спасите человечка от виселицы, угадав загаданное слово по буквам " +
+                        "быстрее, чем закончатся ваши попытки!!!\n\n"
+        );
 
-        int currentCountMistake = 0;
-        char[] hiddenWord = intiHiddenWord(gameWord, HIDDEN_CHAR);
-        char playerLitter;
+        boolean isPlay = isWantToPlay();
 
-        int hiddenCharCount = hiddenWord.length;
-        while (currentCountMistake < MAX_MISTAKES) {
-            printHiddenWord(hiddenWord);
-            playerLitter = getPlayerLetter();
+        while (isPlay) {
+            List<String> wrongLetterList = new ArrayList<>();
+            List<String> words = getDictionaryWords();
+            String secretWord = getRandomWord(words);
+            int currentCountMistake = 0;
+            char[] hiddenWord = intiHiddenWord(secretWord, HIDDEN_CHAR);
+            char playerLitter;
+            int hiddenCharCount;
 
-            if (gameWord.contains(String.valueOf(playerLitter))) {
-                hiddenWord = openLetter(gameWord, hiddenWord, playerLitter);
-            } else {
-                wrongLetterList.add(String.valueOf(playerLitter));
-                currentCountMistake++;
-                System.out.println("Ошибки: " + currentCountMistake + "/" + MAX_MISTAKES);
-                printWrongLetterList(wrongLetterList);
-                printResult(gameStages.get(currentCountMistake));
+            while (currentCountMistake < MAX_MISTAKES) {
+                printHiddenWord(hiddenWord);
+                playerLitter = getPlayerLetter();
+
+                if (secretWord.contains(String.valueOf(playerLitter))) {
+                    hiddenWord = openLetter(secretWord, hiddenWord, playerLitter);
+                } else {
+                    if (wrongLetterList.contains(String.valueOf(playerLitter))) {
+                        System.out.println("Такая буква уже была использована, попробуйте новую");
+                        continue;
+                    }
+                    wrongLetterList.add(String.valueOf(playerLitter));
+                    currentCountMistake++;
+                    System.out.println("Ошибки: " + currentCountMistake + "/" + MAX_MISTAKES);
+                    printWrongLetterList(wrongLetterList);
+                    printResult(gameStages.get(currentCountMistake));
+                }
+                hiddenCharCount = getCountHiddenChar(hiddenWord, HIDDEN_CHAR);
+                if (hiddenCharCount == 0) {
+                    printResult(gameStages.getLast());
+                    break;
+                }
             }
-            hiddenCharCount = getCountHiddenChar(hiddenWord, HIDDEN_CHAR);
-            if (hiddenCharCount == 0) {
-                printResult(gameStages.getLast());
-                break;
-            }
+            System.out.println("Загаданное слово: " + secretWord + "\nХотите сыграть снова?");
+            isPlay = isWantToPlay();
         }
-        System.out.println("Загаданное слово: " + gameWord);
     }
 
     public static void printWrongLetterList(List<String> lists) {
@@ -84,6 +99,23 @@ public class Main {
             hiddenWord[i] = hiddenChar;
         }
         return hiddenWord;
+    }
+    public static boolean isWantToPlay() {
+        System.out.println("Нажмите Enter чтобы начать игру!");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            String input = reader.readLine();
+
+            if (input.isEmpty()) {
+                return true;
+            } else {
+                System.out.println("Ждем вас снова! До свидания!");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
     }
 
     public static char getPlayerLetter() {
