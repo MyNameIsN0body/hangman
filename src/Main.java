@@ -11,7 +11,7 @@ public class Main {
         List<String> gameStages = new ArrayList<>(Arrays.asList(
                 "logo",
                 "game_1", "game_2", "game_3", "game_4", "game_5", "game_6", "gameover",
-                "win")); // 7 попыток
+                "win"));
 
         printResult(gameStages.getFirst());
         System.out.print(
