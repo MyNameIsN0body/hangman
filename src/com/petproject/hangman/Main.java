@@ -5,10 +5,12 @@ import java.util.*;
 
 public class Main {
     private static final int MAX_MISTAKES = 7;
-    private static final char HIDDEN_CHAR = '□';
+    private static final char HIDDEN_LETTER_SYMBOL = '□';
 
     public static void main(String[] args) {
-
+        runStartMenu();
+    }
+    private static void runStartMenu(){
         List<String> gameStages = new ArrayList<>(Arrays.asList(
                 "logo",
                 "game_1", "game_2", "game_3", "game_4", "game_5", "game_6", "gameover",
@@ -27,11 +29,11 @@ public class Main {
         boolean isPlay = isWantToPlay();
 
         while (isPlay) {
-            List<String> wrongLetterList = new ArrayList<>();
+            List<String> wrongLetters = new ArrayList<>();
             List<String> words = getDictionaryWords();
             String secretWord = getRandomWord(words);
             int currentCountMistake = 0;
-            char[] displayedWord = intiHiddenWord(secretWord, HIDDEN_CHAR);
+            char[] displayedWord = intiHiddenWord(secretWord, HIDDEN_LETTER_SYMBOL);
             char playerLitter;
             int hiddenCharCount;
 
@@ -42,17 +44,17 @@ public class Main {
                 if (secretWord.contains(String.valueOf(playerLitter))) {
                     openLetter(secretWord, displayedWord, playerLitter);
                 } else {
-                    if (wrongLetterList.contains(String.valueOf(playerLitter))) {
+                    if (wrongLetters.contains(String.valueOf(playerLitter))) {
                         System.out.println("Такая буква уже была использована, попробуйте новую");
                         continue;
                     }
-                    wrongLetterList.add(String.valueOf(playerLitter));
+                    wrongLetters.add(String.valueOf(playerLitter));
                     currentCountMistake++;
                     System.out.println("Ошибки: " + currentCountMistake + "/" + MAX_MISTAKES);
-                    printWrongLetterList(wrongLetterList);
+                    printWrongLetterList(wrongLetters);
                     printResult(gameStages.get(currentCountMistake));
                 }
-                hiddenCharCount = getCountHiddenChar(displayedWord, HIDDEN_CHAR);
+                hiddenCharCount = getCountHiddenChar(displayedWord, HIDDEN_LETTER_SYMBOL);
                 if (hiddenCharCount == 0) {
                     printResult(gameStages.getLast());
                     break;
