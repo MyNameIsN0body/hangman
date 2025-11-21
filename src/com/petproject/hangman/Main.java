@@ -29,9 +29,9 @@ public class Main {
         boolean isPlay = userWantsToPlay();
 
         while (isPlay) {
-            List<String> wrongLetters = new ArrayList<>();
-            List<String> words = getDictionaryWords();
-            String secretWord = getRandomWord(words);
+            List<Character> wrongLetters = new ArrayList<>();
+            List<String> dictionary = getDictionaryWords();
+            String secretWord = getRandomWord(dictionary);
             int currentCountMistake = 0;
             char[] displayedWord = intiHiddenWord(secretWord, HIDDEN_LETTER_SYMBOL);
             char playerLitter;
@@ -44,14 +44,14 @@ public class Main {
                 if (secretWord.contains(String.valueOf(playerLitter))) {
                     openLetter(secretWord, displayedWord, playerLitter);
                 } else {
-                    if (wrongLetters.contains(String.valueOf(playerLitter))) {
+                    if (wrongLetters.contains(playerLitter)) {
                         System.out.println("Такая буква уже была использована, попробуйте новую");
                         continue;
                     }
-                    wrongLetters.add(String.valueOf(playerLitter));
+                    wrongLetters.add(playerLitter);
                     currentCountMistake++;
                     System.out.println("Ошибки: " + currentCountMistake + "/" + MAX_MISTAKES);
-                    printWrongLetterList(wrongLetters);
+                    printWrongLetters(wrongLetters);
                     printResult(gameStages.get(currentCountMistake));
                 }
                 hiddenCharCount = getCountHiddenChar(displayedWord, HIDDEN_LETTER_SYMBOL);
@@ -65,10 +65,10 @@ public class Main {
         }
     }
 
-    public static void printWrongLetterList(List<String> lists) {
+    public static void printWrongLetters(List<Character> wrongLetters) {
         System.out.print("Список неудачных букв: ");
-        for (String list : lists) {
-            System.out.print(list + " ");
+        for (char letter : wrongLetters) {
+            System.out.print(letter + " ");
         }
         System.out.println(" ");
     }
