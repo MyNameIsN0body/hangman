@@ -83,10 +83,10 @@ public class Main {
         return countHiddenChar;
     }
 
-    public static void openLetter(String wordResult, char[] hiddenWord, char litter) {
-        for (int i = 0; i < wordResult.length(); i++) {
-            if (wordResult.charAt(i) == litter) {
-                hiddenWord[i] = litter;
+    public static void openLetter(String secretWord, char[] hiddenWord, char letter) {
+        for (int i = 0; i < secretWord.length(); i++) {
+            if (secretWord.charAt(i) == letter) {
+                hiddenWord[i] = letter;
             }
         }
     }
