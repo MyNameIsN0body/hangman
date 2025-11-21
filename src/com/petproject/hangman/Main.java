@@ -1,3 +1,5 @@
+package com.petproject.hangman;
+
 import java.io.*;
 import java.util.*;
 
