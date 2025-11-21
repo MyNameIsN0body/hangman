@@ -26,7 +26,7 @@ public class Main {
                         """
         );
 
-        boolean isPlay = isWantToPlay();
+        boolean isPlay = userWantsToPlay();
 
         while (isPlay) {
             List<String> wrongLetters = new ArrayList<>();
@@ -61,7 +61,7 @@ public class Main {
                 }
             }
             System.out.println("Загаданное слово: " + secretWord + "\nХотите сыграть снова?");
-            isPlay = isWantToPlay();
+            isPlay = userWantsToPlay();
         }
     }
 
@@ -106,7 +106,7 @@ public class Main {
         return hiddenWord;
     }
 
-    public static boolean isWantToPlay() {
+    public static boolean userWantsToPlay() {
         System.out.println("Нажмите Enter чтобы начать игру!");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
