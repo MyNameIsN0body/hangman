@@ -39,7 +39,7 @@ public class Main {
 
             while (currentCountMistake < MAX_MISTAKES) {
                 printHiddenWord(displayedWord);
-                playerLitter = getPlayerLetter();
+                playerLitter = readUserLetter();
 
                 if (secretWord.contains(String.valueOf(playerLitter))) {
                     openLetter(secretWord, displayedWord, playerLitter);
@@ -124,7 +124,7 @@ public class Main {
         return false;
     }
 
-    public static char getPlayerLetter() {
+    public static char readUserLetter() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String input;
         try {
