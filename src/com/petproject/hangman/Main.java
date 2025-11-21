@@ -158,7 +158,7 @@ public class Main {
     }
 
     public static List<String> getDictionaryWords() {
-        String fileName = "src/dictionary_words.txt";
+        String fileName = "src/com/petproject/hangman/dictionary_words.txt";
         List<String> dictionaryWords = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -174,7 +174,7 @@ public class Main {
     }
 
     public static void printResult(String str) {
-        String fileName = "src/output.txt";
+        String fileName = "src/com/petproject/hangman/output.txt";
         String start = str + "_start";
         String end = str + "_end";
         StringBuilder content = new StringBuilder();
