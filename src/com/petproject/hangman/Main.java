@@ -154,11 +154,10 @@ public class Main {
         return true;
     }
 
-    public static String getRandomWord(List<String> dictWords) {
-        int max = dictWords.size();
-        Random r = new Random();
-        int randomIndex = r.nextInt(max);
-        return dictWords.get(randomIndex);
+    public static String getRandomWord(List<String> dictionary) {
+        Random random = new Random();
+        int randomIndex = random.nextInt(dictionary.size());
+        return dictionary.get(randomIndex);
     }
 
     public static List<String> getDictionaryWords() {
