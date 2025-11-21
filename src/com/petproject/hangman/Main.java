@@ -146,8 +146,8 @@ public class Main {
         if (letter.length() > 1) {
             return false;
         }
-        char character = letter.charAt(0);
-        if ((character < 1040 || character > 1103) && (character != 1025 && character != 1105)) {
+        char character = letter.toLowerCase().charAt(0);
+        if ((character < 'а' || character > 'я') && character != 'ё') {
             return false;
         }
 
