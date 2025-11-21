@@ -6,7 +6,6 @@ import java.util.*;
 public class Main {
     private static final int MAX_MISTAKES = 7;
     private static final char HIDDEN_CHAR = '□';
-    private static final String NAME_GAME = "'Виселица'";
 
     public static void main(String[] args) {
 
@@ -17,9 +16,12 @@ public class Main {
 
         printResult(gameStages.getFirst());
         System.out.print(
-                "Игра " + NAME_GAME + "\n" +
-                        "Спасите человечка от виселицы, угадав загаданное слово по буквам " +
-                        "быстрее, чем закончатся ваши попытки!!!\n\n"
+                """
+                        Игра 'Виселица'
+                        Спасите человечка от виселицы, угадав загаданное слово по буквам \
+                        быстрее, чем закончатся ваши попытки!!!
+                        
+                        """
         );
 
         boolean isPlay = isWantToPlay();
