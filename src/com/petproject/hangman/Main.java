@@ -54,7 +54,7 @@ public class Main {
                     printWrongLetters(wrongLetters);
                     printResult(gameStages.get(currentCountMistake));
                 }
-                hiddenCharCount = getCountHiddenChar(displayedWord, HIDDEN_LETTER_SYMBOL);
+                hiddenCharCount = getHiddenLetterCount(displayedWord);
                 if (hiddenCharCount == 0) {
                     printResult(gameStages.getLast());
                     break;
@@ -73,10 +73,10 @@ public class Main {
         System.out.println(" ");
     }
 
-    public static int getCountHiddenChar(char[] hiddenWord, char hiddenChar) {
+    public static int getHiddenLetterCount(char[] hiddenWord) {
         int countHiddenChar = 0;
-        for (char hW : hiddenWord) {
-            if (hW == hiddenChar) {
+        for (char letter : hiddenWord) {
+            if (letter == HIDDEN_LETTER_SYMBOL) {
                 countHiddenChar++;
             }
         }
