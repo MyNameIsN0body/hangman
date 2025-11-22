@@ -38,30 +38,30 @@ public class Main {
             List<Character> wrongLetters = new ArrayList<>();
             List<String> dictionary = loadDictionary();
             String secretWord = getRandomWord(dictionary);
-            int currentCountMistake = 0;
-            char[] displayedWord = initHiddenWord(secretWord);
+            int currentMistakeCount = 0;
+            char[] hiddenWordLetters = initHiddenWord(secretWord);
             char playerLitter;
-            int hiddenCharCount;
+            int hiddenLetterCount;
 
-            while (currentCountMistake < MAX_MISTAKES) {
-                printWordLetters(displayedWord);
+            while (currentMistakeCount < MAX_MISTAKES) {
+                printWordLetters(hiddenWordLetters);
                 playerLitter = readUserLetter();
 
                 if (secretWord.contains(String.valueOf(playerLitter))) {
-                    openLetter(secretWord, displayedWord, playerLitter);
+                    openLetter(secretWord, hiddenWordLetters, playerLitter);
                 } else {
                     if (wrongLetters.contains(playerLitter)) {
                         System.out.println("Такая буква уже была использована, попробуйте новую");
                         continue;
                     }
                     wrongLetters.add(playerLitter);
-                    currentCountMistake++;
-                    System.out.println("Ошибки: " + currentCountMistake + "/" + MAX_MISTAKES);
+                    currentMistakeCount++;
+                    System.out.println("Ошибки: " + currentMistakeCount + "/" + MAX_MISTAKES);
                     printWrongLetters(wrongLetters);
-                    printResult(gameStages.get(currentCountMistake));
+                    printResult(gameStages.get(currentMistakeCount));
                 }
-                hiddenCharCount = getHiddenLetterCount(displayedWord);
-                if (hiddenCharCount == 0) {
+                hiddenLetterCount = getHiddenLetterCount(hiddenWordLetters);
+                if (hiddenLetterCount == 0) {
                     printResult(gameStages.getLast());
                     break;
                 }
@@ -80,13 +80,13 @@ public class Main {
     }
 
     public static int getHiddenLetterCount(char[] hiddenWord) {
-        int countHiddenChar = 0;
+        int hiddenLetterCount = 0;
         for (char letter : hiddenWord) {
             if (letter == HIDDEN_LETTER_SYMBOL) {
-                countHiddenChar++;
+                hiddenLetterCount++;
             }
         }
-        return countHiddenChar;
+        return hiddenLetterCount;
     }
 
     public static void openLetter(String secretWord, char[] hiddenWord, char letter) {
