@@ -38,7 +38,7 @@ public class Main {
             int hiddenCharCount;
 
             while (currentCountMistake < MAX_MISTAKES) {
-                printHiddenWord(displayedWord);
+                printWordLetters(displayedWord);
                 playerLitter = readUserLetter();
 
                 if (secretWord.contains(String.valueOf(playerLitter))) {
@@ -91,7 +91,7 @@ public class Main {
         }
     }
 
-    public static void printHiddenWord(char[] hiddenWord) {
+    public static void printWordLetters(char[] hiddenWord) {
         for (char letter : hiddenWord) {
             System.out.print(letter + " ");
         }
