@@ -8,7 +8,13 @@ public class Main {
     private static final char HIDDEN_LETTER_SYMBOL = '□';
 
     public static void main(String[] args) {
-        runStartMenu();
+        try {
+            runStartMenu();
+        } catch (RuntimeException e) {
+            System.out.println("Unhandled error: " + e.getClass().getSimpleName());
+            System.out.println(e.getMessage());
+            System.out.println("Program stopped.");
+        }
     }
     private static void runStartMenu(){
         List<String> gameStages = new ArrayList<>(Arrays.asList(
@@ -30,7 +36,7 @@ public class Main {
 
         while (isPlay) {
             List<Character> wrongLetters = new ArrayList<>();
-            List<String> dictionary = getDictionaryWords();
+            List<String> dictionary = loadDictionary();
             String secretWord = getRandomWord(dictionary);
             int currentCountMistake = 0;
             char[] displayedWord = initHiddenWord(secretWord);
@@ -160,19 +166,36 @@ public class Main {
         return dictionary.get(randomIndex);
     }
 
-    public static List<String> getDictionaryWords() {
+    public static List<String> loadDictionary() {
         String fileName = "src/com/petproject/hangman/dictionary_words.txt";
         List<String> dictionaryWords = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        File file = new File(fileName);
+
+        if (!file.exists()) {
+            throw new RuntimeException("Dictionary file not found: " + file.getAbsolutePath());
+        }
+
+        if (file.length() == 0) {
+            throw new RuntimeException("Dictionary file is empty: " + file.getAbsolutePath());
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                dictionaryWords.add(line);
+                if(line.isEmpty()) {
+                    continue;
+                }
+                dictionaryWords.add(line.trim());
             }
 
         } catch (IOException e) {
-            System.out.println("Ошибка чтения файла: " + e.getMessage());
+            throw new RuntimeException("Error reading dictionary file: " + file.getAbsolutePath() +
+                    ". Details: " + e.getMessage(), e);
         }
-
+        if (dictionaryWords.isEmpty()) {
+            throw new RuntimeException("No valid words loaded from: " + file.getAbsolutePath() +
+                    ". Check file content and format.");
+        }
         return dictionaryWords;
     }
 
