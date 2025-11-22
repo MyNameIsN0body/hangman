@@ -33,7 +33,7 @@ public class Main {
             List<String> dictionary = getDictionaryWords();
             String secretWord = getRandomWord(dictionary);
             int currentCountMistake = 0;
-            char[] displayedWord = intiHiddenWord(secretWord, HIDDEN_LETTER_SYMBOL);
+            char[] displayedWord = initHiddenWord(secretWord);
             char playerLitter;
             int hiddenCharCount;
 
@@ -98,10 +98,10 @@ public class Main {
         System.out.println(" ");
     }
 
-    public static char[] intiHiddenWord(String gameWord, char hiddenChar) {
-        char[] hiddenWord = new char[gameWord.length()];
-        for (int i = 0; i < gameWord.length(); i++) {
-            hiddenWord[i] = hiddenChar;
+    public static char[] initHiddenWord(String secretWord) {
+        char[] hiddenWord = new char[secretWord.length()];
+        for (int i = 0; i < secretWord.length(); i++) {
+            hiddenWord[i] = HIDDEN_LETTER_SYMBOL;
         }
         return hiddenWord;
     }
