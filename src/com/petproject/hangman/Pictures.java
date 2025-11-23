@@ -24,6 +24,31 @@ public final class Pictures {
 
     private static final String[] HANGMAN_STAGES = {
             """
+                                                         ____________________
+                                                        | .__________________|
+                                                        | | / /      
+                                                        | |/ /       
+                                                        | | /        
+                                                        | |/         
+                                                        | |          
+                                                        | |          
+                                                        | |
+                                                        | |
+                                                        | |
+                                                        | |
+                                                        | |
+                                                        | |
+                                                        | |
+                                                        | |
+                                                        | |
+                                                        | |
+                                                        |\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"|
+                                                        |\"|\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"|\"|
+                                                        | |                   | |
+                                                        : :                   : :
+                                                        . .                   . .
+            """,
+            """
                                                          ___________.._______
                                                         | .__________))______|
                                                         | | / /      ||
@@ -172,8 +197,10 @@ public final class Pictures {
                                                         | |                   | |
                                                         : :                   : :
                                                         . .                   . .
-            """,
             """
+    };
+
+    private static final String LOSE_BANNER = """
                                                          ___________.._______
                                                         | .__________))______|
                                                         | | / /      ||
@@ -197,8 +224,7 @@ public final class Pictures {
                                                         | |        \\ \\        | |
                                                         : :         \\ \\       : :
                                                         . .          `'       . .
-            """
-    };
+            """;
 
     public static void printStartBanner() {
         System.out.println(START_BANNER);
@@ -207,6 +233,11 @@ public final class Pictures {
     public static void printWinBanner() {
         System.out.println(WIN_BANNER);
     }
+
+    public static void printLoseBanner() {
+        System.out.println(LOSE_BANNER);
+    }
+
     public static void printHangmanStage(int stage) {
         if (stage < 0 || stage >= HANGMAN_STAGES.length) {
             throw new IllegalArgumentException("Invalid hangman stage: " + stage);
