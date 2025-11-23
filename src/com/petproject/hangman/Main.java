@@ -16,13 +16,9 @@ public class Main {
             System.out.println("Program stopped.");
         }
     }
-    private static void runStartMenu(){
-        List<String> gameStages = new ArrayList<>(Arrays.asList(
-                "logo",
-                "game_1", "game_2", "game_3", "game_4", "game_5", "game_6", "gameover",
-                "win"));
 
-        printResult(gameStages.getFirst());
+    private static void runStartMenu() {
+        Pictures.printStartBanner();
         System.out.print(
                 """
                         Игра 'Виселица'
@@ -31,55 +27,109 @@ public class Main {
                         
                         """
         );
-
-        boolean isPlay = userWantsToPlay();
-
-        while (isPlay) {
-            List<Character> wrongLetters = new ArrayList<>();
-            List<String> dictionary = loadDictionary();
-            String secretWord = getRandomWord(dictionary);
-            int currentMistakeCount = 0;
-            char[] hiddenWordLetters = initHiddenWord(secretWord);
-            char playerLitter;
-            int hiddenLetterCount;
-
-            while (currentMistakeCount < MAX_MISTAKES) {
-                printWordLetters(hiddenWordLetters);
-                playerLitter = readUserLetter();
-
-                if (secretWord.contains(String.valueOf(playerLitter))) {
-                    openLetter(secretWord, hiddenWordLetters, playerLitter);
-                } else {
-                    if (wrongLetters.contains(playerLitter)) {
-                        System.out.println("Такая буква уже была использована, попробуйте новую");
-                        continue;
-                    }
-                    wrongLetters.add(playerLitter);
-                    currentMistakeCount++;
-                    System.out.println("Ошибки: " + currentMistakeCount + "/" + MAX_MISTAKES);
-                    printWrongLetters(wrongLetters);
-                    printResult(gameStages.get(currentMistakeCount));
-                }
-                hiddenLetterCount = getHiddenLetterCount(hiddenWordLetters);
-                if (hiddenLetterCount == 0) {
-                    printResult(gameStages.getLast());
-                    break;
-                }
-            }
-            System.out.println("Загаданное слово: " + secretWord + "\nХотите сыграть снова?");
-            isPlay = userWantsToPlay();
+        while (userWantsToPlay()) {
+            startGame();
         }
     }
 
-    public static void printWrongLetters(List<Character> wrongLetters) {
-        System.out.print("Список неудачных букв: ");
+    private static boolean isGameOver(int currentMistakeCount, int hiddenLetterCount) {
+        return isLose(currentMistakeCount) || isWin(hiddenLetterCount);
+    }
+
+    private static boolean isWin(int hiddenLetterCount) {
+        return hiddenLetterCount == 0;
+    }
+
+    private static boolean isLose(int currentMistakeCount) {
+        return currentMistakeCount >= MAX_MISTAKES;
+    }
+
+    private static void startGame() {
+        List<Character> wrongLetters = new ArrayList<>();
+        List<String> dictionary = loadDictionary();
+        String secretWord = getRandomWord(dictionary);
+        char[] hiddenWordLetters = initHiddenWord(secretWord);
+        int hiddenLetterCount = getHiddenLetterCount(hiddenWordLetters);
+        int currentMistakeCount = 0;
+
+        while (!isGameOver(currentMistakeCount, hiddenLetterCount)) {
+            printGameState(hiddenWordLetters, currentMistakeCount, wrongLetters);
+            currentMistakeCount = processGuess(secretWord, hiddenWordLetters, wrongLetters, currentMistakeCount);
+
+            if (isWin(getHiddenLetterCount(hiddenWordLetters))) {
+                System.out.println("\uD83C\uDFC6 Загаданное слово: " + secretWord);
+                Pictures.printWinBanner();
+                break;
+            }
+            if (isLose(currentMistakeCount)) {
+                System.out.println("\uD83D\uDC80 Загаданное слово: " + secretWord);
+                Pictures.printLoseBanner();
+                break;
+            }
+        }
+    }
+
+    private static void printGameState(char[] hiddenWordLetters, int currentMistakeCount, List<Character> wrongLetters) {
+        Pictures.printHangmanStage(currentMistakeCount);
+        printWrongLetters(wrongLetters);
+        printWordLetters(hiddenWordLetters);
+    }
+
+    private static int processGuess(String secretWord, char[] hiddenWordLetters, List<Character> wrongLetters, int currentMistakeCount) {
+        char playerLitter;
+
+        playerLitter = readUserLetter();
+        if (secretWord.contains(String.valueOf(playerLitter))) {
+            if ((containsChar(hiddenWordLetters, playerLitter))) {
+                printLetterAlreadyUsed();
+            } else {
+                openLetter(secretWord, hiddenWordLetters, playerLitter);
+            }
+
+        } else {
+            if ((containsChar(wrongLetters, playerLitter))) {
+                printCurrentMistakeCount(currentMistakeCount);
+                printLetterAlreadyUsed();
+                return currentMistakeCount;
+            }
+            wrongLetters.add(playerLitter);
+            ++currentMistakeCount;
+        }
+        printCurrentMistakeCount(currentMistakeCount);
+        return currentMistakeCount;
+
+    }
+
+    private static boolean containsChar(char[] array, char playerLitter) {
+        for (char litter : array) {
+            if (litter == playerLitter) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean containsChar(List<Character> list, char playerLitter) {
+        return list.contains(playerLitter);
+    }
+
+    private static void printLetterAlreadyUsed() {
+        System.out.println("\uD83D\uDEAB Такая буква уже была использована, попробуйте новую");
+    }
+
+    private static void printCurrentMistakeCount(int currentMistakeCount) {
+        System.out.println("Ошибки: " + currentMistakeCount + "/" + MAX_MISTAKES);
+    }
+
+    private static void printWrongLetters(List<Character> wrongLetters) {
+        System.out.print("\uD83D\uDCDD Список неудачных букв: ");
         for (char letter : wrongLetters) {
             System.out.print(letter + " ");
         }
         System.out.println(" ");
     }
 
-    public static int getHiddenLetterCount(char[] hiddenWord) {
+    private static int getHiddenLetterCount(char[] hiddenWord) {
         int hiddenLetterCount = 0;
         for (char letter : hiddenWord) {
             if (letter == HIDDEN_LETTER_SYMBOL) {
@@ -89,7 +139,7 @@ public class Main {
         return hiddenLetterCount;
     }
 
-    public static void openLetter(String secretWord, char[] hiddenWord, char letter) {
+    private static void openLetter(String secretWord, char[] hiddenWord, char letter) {
         for (int i = 0; i < secretWord.length(); i++) {
             if (secretWord.charAt(i) == letter) {
                 hiddenWord[i] = letter;
@@ -97,14 +147,14 @@ public class Main {
         }
     }
 
-    public static void printWordLetters(char[] hiddenWord) {
+    private static void printWordLetters(char[] hiddenWord) {
         for (char letter : hiddenWord) {
             System.out.print(letter + " ");
         }
         System.out.println(" ");
     }
 
-    public static char[] initHiddenWord(String secretWord) {
+    private static char[] initHiddenWord(String secretWord) {
         char[] hiddenWord = new char[secretWord.length()];
         for (int i = 0; i < secretWord.length(); i++) {
             hiddenWord[i] = HIDDEN_LETTER_SYMBOL;
@@ -112,8 +162,8 @@ public class Main {
         return hiddenWord;
     }
 
-    public static boolean userWantsToPlay() {
-        System.out.println("Нажмите Enter чтобы начать игру!");
+    private static boolean userWantsToPlay() {
+        System.out.println("\uD83C\uDFAE Для начала игры нажмите Enter. \uD83C\uDFC3 Для выхода - любую другую клавишу и Enter.");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
             String input = reader.readLine();
@@ -121,7 +171,7 @@ public class Main {
             if (input.isEmpty()) {
                 return true;
             } else {
-                System.out.println("Ждем вас снова! До свидания!");
+                System.out.println("\uD83D\uDCAB Ждем вас снова! \uD83D\uDC4B До свидания!");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -130,12 +180,12 @@ public class Main {
         return false;
     }
 
-    public static char readUserLetter() {
+    private static char readUserLetter() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String input;
         try {
             do {
-                System.out.println("Введите русскую букву:");
+                System.out.println("✏️ Введите русскую букву:");
                 input = reader.readLine();
             } while (!isValidInput(input));
 
@@ -145,7 +195,7 @@ public class Main {
         return input.toLowerCase().charAt(0);
     }
 
-    public static boolean isValidInput(String letter) {
+    private static boolean isValidInput(String letter) {
         if (letter == null || letter.isEmpty()) {
             return false;
         }
@@ -160,13 +210,13 @@ public class Main {
         return true;
     }
 
-    public static String getRandomWord(List<String> dictionary) {
+    private static String getRandomWord(List<String> dictionary) {
         Random random = new Random();
         int randomIndex = random.nextInt(dictionary.size());
         return dictionary.get(randomIndex);
     }
 
-    public static List<String> loadDictionary() {
+    private static List<String> loadDictionary() {
         String fileName = "src/com/petproject/hangman/dictionary_words.txt";
         List<String> dictionaryWords = new ArrayList<>();
         File file = new File(fileName);
@@ -182,7 +232,7 @@ public class Main {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if(line.isEmpty()) {
+                if (line.isEmpty()) {
                     continue;
                 }
                 dictionaryWords.add(line.trim());
@@ -197,34 +247,5 @@ public class Main {
                     ". Check file content and format.");
         }
         return dictionaryWords;
-    }
-
-    public static void printResult(String str) {
-        String fileName = "src/com/petproject/hangman/output.txt";
-        String start = str + "_start";
-        String end = str + "_end";
-        StringBuilder content = new StringBuilder();
-        boolean insideBlock = false;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.equals(start)) {
-                    insideBlock = true;
-                    continue;
-                }
-                if (line.contains(end)) {
-                    break;
-                }
-                if (insideBlock) {
-                    content.append(line).append("\n");
-                }
-
-            }
-            System.out.println(content);
-        } catch (IOException e) {
-            System.out.println("Ошибка чтения файла: " + e.getMessage());
-        }
-
     }
 }
